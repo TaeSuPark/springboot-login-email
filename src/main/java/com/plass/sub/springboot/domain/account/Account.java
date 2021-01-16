@@ -21,9 +21,12 @@ public class Account {
     private String email;
 
     @Column(unique = true)
-    private String nickname;
+    private String name;
 
     private String password;
+
+    @Column(unique = true)
+    private String phone;
 
     //이메일 인증 여부 확인
     private boolean emailVerified;
@@ -31,10 +34,11 @@ public class Account {
     private String emailCheckToken;
 
     @Builder
-    public Account(String email, String nickname, String password) {
+    public Account(String email, String name, String password, String phone) {
         this.email = email;
-        this.nickname = nickname;
+        this.name = name;
         this.password = password;
+        this.phone = phone;
     }
 
     public void generateEmailCheckToken() {
