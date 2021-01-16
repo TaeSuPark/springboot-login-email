@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+</head>
+<body>
+<h1>이메일 확인</h1>
+
+<form th:action="@{/check}" method="post">
+    <input type="text" name="token" placeholder="값 입력"> <br>
+    <button>확인</button>
+</form>
+</body>
+</html>

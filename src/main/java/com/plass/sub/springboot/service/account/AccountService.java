@@ -3,6 +3,7 @@ package com.plass.sub.springboot.service.account;
 
 import com.plass.sub.springboot.domain.account.AccountRepository;
 import com.plass.sub.springboot.web.dto.SignUpDto;
+import com.plass.sub.springboot.web.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,21 +15,58 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
+    private String randNum;
+    private boolean checkFlag = false;
 
-
-    public void mailSend(SignUpDto signUpDto) {
+    public String mailSend(SignUpDto signUpDto) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
+            // ---- randNum 생성부
+            randNum = randNumCreate();
+            //------------//
             message.setTo(signUpDto.getEmail());
-            //message.setFrom(AccountService.FROM_ADDRESS);
-            message.setSubject("인증 안내 메일입니다.");
-            message.setText("??");
-
+            //message.setFrom(); // 누가 메일을 보내는지 설정할 수 있음
+            message.setSubject("인증 안내 메일입니다."); // 메일 제목
+            message.setText("해당 코드를 입력해주세요." + " CODE : " + randNum); // 메일 내용
             javaMailSender.send(message);
         }
         catch(Exception e){
             e.printStackTrace();
         }
+
+        return randNum;
+    }
+
+    public boolean mailCheck(TokenDto tokenDto) {
+        try {
+            if (randNum.equals(tokenDto.getToken())) {
+                checkFlag = true;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return checkFlag;
+    }
+
+    //랜덤한 String 생성
+    public String randNumCreate() {
+        String tempNum="";
+        for(int i=0; i<8; i++) {
+            int rndVal = (int)(Math.random() * 62);
+            if(rndVal < 10) {
+                tempNum += rndVal;
+            }
+            else if(rndVal > 35) {
+                tempNum += (char)(rndVal + 61);
+            }
+            else {
+                tempNum += (char)(rndVal + 55);
+            }
+        }
+        return tempNum;
+
     }
 }
 
